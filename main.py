@@ -1,11 +1,18 @@
-#imports
+# imports
 import sys
-import helper
-import errors
+import packer
+import validation
 
-#dev variables
+# dev variables
 DEV = (sys.argv[1] == "DEV")
 
-#globals
-args = helper.setargs(sys.argv, DEV)
+# initializations
+packer.initialize_packer(sys.argv, DEV)
 
+# globals
+args = packer.get_args()
+package_name = packer.get_filename()
+
+# temporary
+package = packer.generate_package()
+packer.write_package(package)
