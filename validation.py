@@ -24,3 +24,7 @@ def check_args_initialized(args):
             raise Exception("Arguments not initialized. Please ensure that arguments have been properly set before using them.")
         else:
             raise Exception("Arguments have not been properly initialized or have been corrupted.")
+        
+def check_int_list(list):
+    if len(list) > 32:
+        raise Exception("Argument longer than 32 bits. Please use a smaller one.")

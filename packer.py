@@ -1,4 +1,5 @@
 import validation
+import hashlib
 
 # globals
 ARGS = {}
@@ -45,13 +46,33 @@ def generate_package():
     #dev mode message
     if DEV:
         print("================GENERATING PACKAGE================\n"+
-              "OUTPUT LOCATION:    "+ARGS["PACKAGE_OUT"]+"/"+ARGS["PACKAGE_NAME"]+"\n"+
-              "USING INPUTS: \n"+
-              "   CAR_ID:          "+ARGS["CAR_ID"].__str__()+"\n"+
+              "OUTPUT LOCATION:    "+ARGS["PACKAGE_OUT"]+"/"+ARGS["PACKAGE_NAME"]+"\n" +
+              "USING INPUTS: \n" +
+              "   CAR_ID:          "+ARGS["CAR_ID"].__str__()+"\n" +
               "   FEATURE_NUMBER:  "+ARGS["FEATURE_NUMBER"].__str__())
     
     # NOTE: TEMPORARY GENERATION. PLACEHOLDER FOR NOW
-    package = int((ARGS["CAR_ID"] + ARGS["FEATURE_NUMBER"]) / 2)
+    card_id_list = [int(x) for x in str(bin(ARGS["CAR_ID"])[2:])]
+    feature_number_list = [int(x) for x in str(bin(ARGS["FEATURE_NUMBER"])[2:])]
+    hash_list = []
+
+    #make sure arguments are the right size
+    validation.check_int_list(card_id_list)
+    validation.check_int_list(feature_number_list)
+
+    #combine lists into a single bit list
+    for i in range(32):
+        num1 = 0
+        num2 = 0
+        if i < len(card_id_list):
+            num1 = card_id_list[i]
+        if i < len(feature_number_list):
+            num2 = feature_number_list[i]
+        hash_list.append(num1)
+        hash_list.append(num2)
+    
+    #hash bits using hashlib
+    package = hashlib.md5(str(int(bin(int(''.join(map(str, hash_list)), 2) << 1)[2:], base=2)).encode()).hexdigest()
     
     #dev message
     if DEV:
